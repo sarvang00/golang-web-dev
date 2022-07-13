@@ -1,0 +1,4 @@
+# Creating basic HTTP cookie
+Cookies play an important role when storing information on the client side and we can use their values to identify a user. Basically, cookies were invented to solve the problem of remembering information about the user or persistent-login authentication, which refers to websites being able to remember the identity of a principal between sessions.
+
+Cookies are simple text files that web browsers create when you visit websites on the internet. Your device stores the text files locally, allowing your browser to access the cookie and pass data back to the original website, and are saved in name-value pairs.
