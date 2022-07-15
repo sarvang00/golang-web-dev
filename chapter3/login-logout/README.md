@@ -1,0 +1,2 @@
+# Implementing login and logout in web application
+Whenever we want an application to be accessed by registered users, we have to implement a mechanism that asks for the user's credentials before allowing them to view any web pages.
