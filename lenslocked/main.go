@@ -2,42 +2,46 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
+	"path/filepath"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 )
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprint(w, "<h1>Hello from this site!</h1>")
+	// Unix-only
+	// tpl, err := template.ParseFiles("templates/home.gohtml")
+	// Universal
+	tplPath := filepath.Join("templates", "home.gohtml")
+	renderTemplate(w, tplPath)
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprint(w, "<h1>Contact Page!</h1>")
-	fmt.Fprint(w, "<p>To get in touch, Email: <a href=\"mailto:sdave@dal.ca\">sdave@dal.ca</a></p>")
+	tplPath := filepath.Join("templates", "contact.gohtml")
+	renderTemplate(w, tplPath)
 }
 
 func faqHandler(w http.ResponseWriter, r *http.Request) {
+	renderTemplate(w, filepath.Join("templates", "faq.gohtml"))
+}
+
+func renderTemplate(w http.ResponseWriter, templatePath string) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprint(w, `<h1>FAQ Page</h1>
-<ul>
-  <li>
-    <b>Is there a free version?</b>
-    Yes! We offer a free trial for 30 days on any paid plans.
-  </li>
-  <li>
-    <b>What are your support hours?</b>
-    We have support staff answering emails 24/7, though response
-    times may be a bit slower on weekends.
-  </li>
-  <li>
-    <b>How do I contact support?</b>
-    Email us - <a href="mailto:support@lenslocked.com">support@lenslocked.com</a>
-  </li>
-</ul>
-`)
+	tpl, err := template.ParseFiles(templatePath)
+	if err != nil {
+		log.Println("Error parsing template: ", err)
+		http.Error(w, "Error parsing template", http.StatusInternalServerError)
+		return
+	}
+	err = tpl.Execute(w, nil)
+	if err != nil {
+		log.Printf("Failed to execute template: %v. Maybe check the data passed.\n", err)
+		http.Error(w, "Template execution failed", http.StatusInternalServerError)
+		return
+	}
 }
 
 // Exercise 1 - URL Params
