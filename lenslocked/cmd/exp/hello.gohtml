@@ -3,3 +3,12 @@
 <p>Visits: {{.Meta.Visits}}</p>
 <p>Bio1: {{.Bio1}}</p>
 <p>Bio2: {{.Bio2}}</p>
+
+<script>
+    const user = {
+        "name": {{.Name }},
+        "age": {{.Age}},
+        "bio": { {.Bio1 } }
+    };
+    console.log(user);
+</script>
