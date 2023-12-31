@@ -34,9 +34,21 @@ func main() {
 		Bio2: `<script>alert("Haha, you have been h4x0r3d!");</script>`,
 	}
 
+	user2 := struct {
+		Name string
+		Age  int
+	}{
+		Name: "Jane Doe",
+	}
+
 	fmt.Println("User meta visits: ", user.Meta.Visits)
 
 	err = t.Execute(os.Stdout, user)
+	if err != nil {
+		panic(err)
+	}
+
+	err = t.Execute(os.Stdout, user2)
 	if err != nil {
 		panic(err)
 	}

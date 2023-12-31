@@ -1,4 +1,5 @@
 <h1>Hello, {{.Name}}</h1>
+{{- if .Age }}
 <p>Age: {{.Age}}</p>
 <p>Visits: {{.Meta.Visits}}</p>
 <p>Bio1: {{.Bio1}}</p>
@@ -8,7 +9,10 @@
     const user = {
         "name": {{.Name }},
         "age": {{.Age}},
-        "bio": { {.Bio1 } }
+        "bio": {{.Bio1 }}
     };
     console.log(user);
 </script>
+{{else}}
+<p>No age data!!</p>
+{{- end}}
