@@ -9,23 +9,13 @@ import (
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/sarvang00/golang-web-dev/lenslocked/controllers"
+	"github.com/sarvang00/golang-web-dev/lenslocked/views"
 )
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	// Unix-only:
-	// tpl, err := template.ParseFiles("templates/home.gohtml")
-	// Universal:
-	tplPath := filepath.Join("templates", "home.gohtml")
-	renderTemplate(w, tplPath)
-}
-
-func contactHandler(w http.ResponseWriter, r *http.Request) {
-	tplPath := filepath.Join("templates", "contact.gohtml")
-	renderTemplate(w, tplPath)
-}
-
-func faqHandler(w http.ResponseWriter, r *http.Request) {
-	renderTemplate(w, filepath.Join("templates", "faq.gohtml"))
+func paramHandler(w http.ResponseWriter, r *http.Request) {
+	userID := chi.URLParam(r, "userID")
+	fmt.Fprintf(w, "hi %v", userID)
 }
 
 func renderTemplate(w http.ResponseWriter, templatePath string) {
@@ -44,17 +34,28 @@ func renderTemplate(w http.ResponseWriter, templatePath string) {
 	}
 }
 
-func paramHandler(w http.ResponseWriter, r *http.Request) {
-	userID := chi.URLParam(r, "userID")
-	fmt.Fprintf(w, "hi %v", userID)
-}
-
 func main() {
 	rtr := chi.NewRouter()
+
 	rtr.Use(middleware.Logger)
-	rtr.Get("/", homeHandler)
-	rtr.Get("/contact", contactHandler)
-	rtr.Get("/faq", faqHandler)
+
+	tpl, err := views.Parse(filepath.Join("templates", "home.gohtml"))
+	if err != nil {
+		panic(err)
+	}
+	rtr.Get("/", controllers.StaticHandler(tpl))
+
+	tpl, err = views.Parse(filepath.Join("templates", "contact.gohtml"))
+	if err != nil {
+		panic(err)
+	}
+	rtr.Get("/contact", controllers.StaticHandler(tpl))
+
+	tpl, err = views.Parse(filepath.Join("templates", "faq.gohtml"))
+	if err != nil {
+		panic(err)
+	}
+	rtr.Get("/faq", controllers.StaticHandler(tpl))
 
 	rtr.Route("/params/", func(subRtr chi.Router) {
 		subRtr.Get("/{userID}", paramHandler)
