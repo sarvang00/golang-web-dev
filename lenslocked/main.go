@@ -5,11 +5,11 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"path/filepath"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/sarvang00/golang-web-dev/lenslocked/controllers"
+	"github.com/sarvang00/golang-web-dev/lenslocked/templates"
 	"github.com/sarvang00/golang-web-dev/lenslocked/views"
 )
 
@@ -38,13 +38,13 @@ func main() {
 	rtr := chi.NewRouter()
 
 	rtr.Use(middleware.Logger)
-	rtr.Get("/", controllers.StaticHandler(
-		views.Must(views.Parse(filepath.Join("templates", "home.gohtml")))))
-	rtr.Get("/contact", controllers.StaticHandler(
-		views.Must(views.Parse(filepath.Join("templates", "contact.gohtml")))))
-	rtr.Get("/faq", controllers.StaticHandler(
-		views.Must(views.Parse(filepath.Join("templates", "faq.gohtml")))))
 
+	rtr.Get("/", controllers.StaticHandler(
+		views.Must(views.ParseFS(templates.FS, "home.gohtml"))))
+	rtr.Get("/contact", controllers.StaticHandler(
+		views.Must(views.ParseFS(templates.FS, "contact.gohtml"))))
+	rtr.Get("/faq", controllers.StaticHandler(
+		views.Must(views.ParseFS(templates.FS, "faq.gohtml"))))
 	rtr.Route("/params/", func(subRtr chi.Router) {
 		subRtr.Get("/{userID}", paramHandler)
 	})
