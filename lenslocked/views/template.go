@@ -23,8 +23,8 @@ func Parse(templatePath string) (Template, error) {
 	return Template{htmlTpl: tpl}, nil
 }
 
-func ParseFS(fs fs.FS, pattern string) (Template, error) {
-	tpl, err := template.ParseFS(fs, pattern)
+func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
+	tpl, err := template.ParseFS(fs, patterns...)
 	if err != nil {
 		return Template{}, fmt.Errorf("FS Template parsing error %w", err)
 	}
