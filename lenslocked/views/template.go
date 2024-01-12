@@ -8,11 +8,15 @@ import (
 	"net/http"
 )
 
-func Must(t Template, err error) Template {
+type Template struct {
+	htmlTpl *template.Template
+}
+
+func Must(tpl Template, err error) Template {
 	if err != nil {
 		panic(err)
 	}
-	return t
+	return tpl
 }
 
 func Parse(templatePath string) (Template, error) {
@@ -31,13 +35,9 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 	return Template{htmlTpl: tpl}, nil
 }
 
-type Template struct {
-	htmlTpl *template.Template
-}
-
-func (t Template) ExecuteTemplate(w http.ResponseWriter, data interface{}) {
+func (tpl Template) ExecuteTemplate(w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	err := t.htmlTpl.Execute(w, nil)
+	err := tpl.htmlTpl.Execute(w, data)
 	if err != nil {
 		log.Printf("Failed to execute template: %v. Maybe check the data passed.\n", err)
 		http.Error(w, "Template execution failed", http.StatusInternalServerError)

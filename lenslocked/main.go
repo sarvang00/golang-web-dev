@@ -43,7 +43,7 @@ func main() {
 		views.Must(views.ParseFS(templates.FS, "home.gohtml"))))
 	rtr.Get("/contact", controllers.StaticHandler(
 		views.Must(views.ParseFS(templates.FS, "contact.gohtml"))))
-	rtr.Get("/faq", controllers.StaticHandler(
+	rtr.Get("/faq", controllers.FAQ(
 		views.Must(views.ParseFS(templates.FS, "faq.gohtml"))))
 	rtr.Route("/params/", func(subRtr chi.Router) {
 		subRtr.Get("/{userID}", paramHandler)
