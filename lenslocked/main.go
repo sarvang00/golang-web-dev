@@ -40,7 +40,7 @@ func main() {
 	rtr.Use(middleware.Logger)
 
 	rtr.Get("/", controllers.StaticHandler(
-		views.Must(views.ParseFS(templates.FS, "home.gohtml"))))
+		views.Must(views.ParseFS(templates.FS, "home.gohtml", "layout-parts.gohtml"))))
 	rtr.Get("/contact", controllers.StaticHandler(
 		views.Must(views.ParseFS(templates.FS, "contact.gohtml"))))
 	rtr.Get("/faq", controllers.FAQ(
