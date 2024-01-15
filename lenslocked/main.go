@@ -40,11 +40,11 @@ func main() {
 	rtr.Use(middleware.Logger)
 
 	rtr.Get("/", controllers.StaticHandler(
-		views.Must(views.ParseFS(templates.FS, "home.gohtml", "layout-parts.gohtml"))))
+		views.Must(views.ParseFS(templates.FS, "home.gohtml", "tailwind.gohtml"))))
 	rtr.Get("/contact", controllers.StaticHandler(
-		views.Must(views.ParseFS(templates.FS, "contact.gohtml"))))
+		views.Must(views.ParseFS(templates.FS, "contact.gohtml", "tailwind.gohtml"))))
 	rtr.Get("/faq", controllers.FAQ(
-		views.Must(views.ParseFS(templates.FS, "faq.gohtml"))))
+		views.Must(views.ParseFS(templates.FS, "faq.gohtml", "tailwind.gohtml"))))
 	rtr.Route("/params/", func(subRtr chi.Router) {
 		subRtr.Get("/{userID}", paramHandler)
 	})
