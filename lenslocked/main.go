@@ -48,8 +48,10 @@ func main() {
 	rtr.Route("/params/", func(subRtr chi.Router) {
 		subRtr.Get("/{userID}", paramHandler)
 	})
-	rtr.Get("/signup", controllers.StaticHandler(
-		views.Must(views.ParseFS(templates.FS, "signup.gohtml", "tailwind.gohtml"))))
+
+	usersC := controllers.Users{}
+	usersC.Templates.New = views.Must(views.ParseFS(templates.FS, "signup.gohtml", "tailwind.gohtml"))
+	rtr.Get("/signup", usersC.New)
 
 	rtr.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Page Not Found", http.StatusNotFound)
