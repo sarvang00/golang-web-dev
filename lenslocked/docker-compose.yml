@@ -12,6 +12,9 @@ services:
     ports: # Expose ports so that apps not running via docker compose can connect to them.
       - 5432:5432 # format here is "port on our machine":"port on container"
 
+  # Command to connect with PSQL CLI:
+  # docker compose exec -it db psql -U baloo -d lenslocked
+
   # Adminer provides a nice little web UI to connect to databases
   adminer:
     image: adminer
