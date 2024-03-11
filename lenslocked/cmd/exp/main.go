@@ -1,55 +1,46 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
-	"html/template"
-	"os"
+
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
-type UserMeta struct {
-	Visits int
+type PostGresConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Database string
+	SSLMode  string
 }
 
-type User struct {
-	Name string
-	Age  int
-	Meta UserMeta
-	Bio1 string
-	Bio2 template.HTML
+func (cfg PostGresConfig) String() string {
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database, cfg.SSLMode)
 }
 
 func main() {
-	t, err := template.ParseFiles("hello.gohtml")
+	cfg := PostGresConfig{
+		Host:     "localhost",
+		Port:     "5432",
+		User:     "baloo",
+		Password: "junglebook",
+		Database: "lenslocked",
+		SSLMode:  "disable",
+	}
+	// side effect
+	db, err := sql.Open("pgx", cfg.String())
+
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
 	if err != nil {
 		panic(err)
 	}
 
-	user := User{
-		Name: "John Doe",
-		Age:  12,
-		Meta: UserMeta{
-			Visits: 3,
-		},
-		Bio1: `<script>alert("Haha, you have been h4x0r3d!");</script>`,
-		Bio2: `<script>alert("Haha, you have been h4x0r3d!");</script>`,
-	}
-
-	user2 := struct {
-		Name string
-		Age  int
-	}{
-		Name: "Jane Doe",
-	}
-
-	fmt.Println("User meta visits: ", user.Meta.Visits)
-
-	err = t.Execute(os.Stdout, user)
-	if err != nil {
-		panic(err)
-	}
-
-	err = t.Execute(os.Stdout, user2)
-	if err != nil {
-		panic(err)
-	}
+	fmt.Println("Connected")
 }
